@@ -1,11 +1,13 @@
 package id.my.hendisantika.paymentdetailsservice.service;
 
+import id.my.hendisantika.paymentdetailsservice.exception.ReferenceNotFoundException;
 import id.my.hendisantika.paymentdetailsservice.model.PaymentDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,5 +38,10 @@ public class PaymentDetailsService {
         } catch (RuntimeException e) {
             log.warn("Could not store payment details {}", paymentDetails, e);
         }
+    }
+
+    public PaymentDetails get(String reference) {
+        return Optional.ofNullable(cache.get(reference))
+                .orElseThrow(() -> new ReferenceNotFoundException("No reference found with number " + reference));
     }
 }
