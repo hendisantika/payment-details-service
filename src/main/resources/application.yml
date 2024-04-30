@@ -1,0 +1,24 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+spring:
+  application:
+    name: payment-details-service
+
+payment-details:
+  redis:
+    host: localhost
+    port: 6379
+    mode: SINGLE
+    poll-frequency: 500
+
+kafka:
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9091}
+  consumer:
+    payment-details:
+      topic: payment-details
+      autostart: true
+      groupId: payment-details-service
+      autoOffsetReset: earliest
+      threads: 1
