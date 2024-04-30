@@ -1,8 +1,13 @@
 package id.my.hendisantika.paymentdetailsservice.controller;
 
+import id.my.hendisantika.paymentdetailsservice.exception.ReferenceNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,4 +23,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 @ControllerAdvice
 @AllArgsConstructor
 public class RestExceptionHandler {
+    @ExceptionHandler(ReferenceNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleReferenceNotFoundException(ReferenceNotFoundException e) {
+
+        return ResponseEntity.status(NOT_FOUND).body(ApiErrorResponse.builder()
+                .errorCode(NOT_FOUND.value())
+                .description(e.getMessage())
+                .build());
+    }
 }
