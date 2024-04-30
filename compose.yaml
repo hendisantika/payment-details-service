@@ -1,1 +1,29 @@
 services:
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports: [ "6379:6379/tcp" ]
+
+    zookeeper:
+      image: confluentinc/cp-zookeeper:latest
+      environment:
+        ZOOKEEPER_CLIENT_PORT: 2181
+        ZOOKEEPER_TICK_TIME: 2000
+      ports:
+        - 2181:2181
+
+    kafka:
+      image: confluentinc/cp-kafka:latest
+      hostname: kafka
+      ports:
+        - "9091:9091"
+      environment:
+        KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka:19091,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9091
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+        KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+        KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+        KAFKA_BROKER_ID: 1
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+        KAFKA_CREATE_TOPICS: "payment-details"
+      depends_on:
+        - zookeeper
