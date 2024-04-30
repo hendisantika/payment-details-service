@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
@@ -28,6 +29,15 @@ public class RestExceptionHandler {
 
         return ResponseEntity.status(NOT_FOUND).body(ApiErrorResponse.builder()
                 .errorCode(NOT_FOUND.value())
+                .description(e.getMessage())
+                .build());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiErrorResponse> handleUnknownException(Exception e) {
+
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(ApiErrorResponse.builder()
+                .errorCode(INTERNAL_SERVER_ERROR.value())
                 .description(e.getMessage())
                 .build());
     }
