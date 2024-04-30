@@ -2,7 +2,9 @@ package id.my.hendisantika.paymentdetailsservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import id.my.hendisantika.paymentdetailsservice.model.PaymentDetails;
 import lombok.Builder;
+import lombok.NonNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
